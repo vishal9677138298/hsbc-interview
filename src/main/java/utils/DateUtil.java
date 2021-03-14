@@ -5,17 +5,11 @@ import java.time.ZoneId;
 
 public class DateUtil {
 
-    private static String date;
+    public String date = getCurrentDate();
 
-    public static String getDate() {
-        if(date==null)
-            return getCurrentDate();
-        else
-            return date;
-    }
-
-    public void setDate(String date) {
-        DateUtil.date = date;
+    public DateUtil setDate(String date) {
+        this.date = date;
+        return this;
     }
 
     private static String getCurrentDate(){

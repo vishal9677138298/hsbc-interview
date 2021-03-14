@@ -2,7 +2,6 @@ package steps;
 
 import clients.CurrentExRateClient;
 import constants.Error;
-import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -26,12 +25,18 @@ public class LatestExchangeRateSteps {
         this.data = data;
     }
 
-    @Before("@latestExchangeRates")
-    public void setup(){
-        Endpoint endpoint = new Endpoint("/latest");
+    @Given("^when (currentDate|\\d{4}-\\d{2}-\\d{2}) is set as the date$")
+    public void setEndpoint(String date) {
+        if (date.equals("currentDate")) {
+            new Endpoint("/latest");
+            data.setDateHandler(new DateUtil());
+        } else {
+            new Endpoint("/" + date);
+            data.setDateHandler(new DateUtil().setDate(date));
+        }
     }
 
-    @Given("making a call to latest rate endpoint")
+    @When("making a call to the rates api")
     public void fireRequest(){
         data.response = CurrentExRateClient.getCurrentExchangeRates();
     }
@@ -42,11 +47,11 @@ public class LatestExchangeRateSteps {
     }
 
 
-    @Then("^the exchange rates must be fetched for the current date, for various currencies based on (\\w+)$")
+    @Then("^the exchange rates must be fetched for the requested date for various currencies based on (\\w+)$")
     public void theExchangeRatesMustBeFetchedForTheCurrentDate(String baseCurrency) {
         JsonPath jsonResponse = RequestHandler.getResponseAsJsonPath(data.response);
         assertThat(jsonResponse.getString("base"), is(equalTo(baseCurrency)));
-        assertThat(jsonResponse.getString("date"), is(equalTo(DateUtil.getDate())));
+        assertThat(jsonResponse.getString("date"), is(equalTo(data.getDateHandler().date)));
         Map<String, Float> rates = jsonResponse.getMap("rates");
         assertThat(rates.keySet().size(), is(greaterThan(0)));
         rates.forEach((currency, exRate) -> {
@@ -56,7 +61,7 @@ public class LatestExchangeRateSteps {
     }
 
 
-    @When("^making a call to latest rate api with several currencies as query param$")
+    @When("^making a call to the rates api with several currencies as query param$")
     public void makingACallToLatestRateApiWithSeveralCurrenciesAsQueryParam(List<String> currencies) {
         data.response = CurrentExRateClient.getRatesForCurrencies(currencies);
         data.setCurrencies(currencies);
@@ -68,11 +73,11 @@ public class LatestExchangeRateSteps {
         Map<String, Float> rates = response.getMap("rates");
         assertThat(rates.keySet()).hasSameElementsAs(data.currencies);
         rates.forEach((currency, exchangeRate) -> assertThat(exchangeRate, is(instanceOf(Float.class))));
-        assertThat(response.getString("date"), is(equalTo(DateUtil.getDate())));
+        assertThat(response.getString("date"), is(equalTo(data.getDateHandler().date)));
     }
 
 
-    @When("^making a call to latest rate api with (\\w+) as the base currency$")
+    @When("^making a call to rates api with (\\w+) as the base currency$")
     public void makingACallToLatestRateApiWithUSDAsTheBaseCurrency(String baseCurrency) {
         data.response = CurrentExRateClient.getExRatesBasedOnCurrency(baseCurrency);
         data.setBaseCurrency(baseCurrency);
@@ -81,7 +86,7 @@ public class LatestExchangeRateSteps {
     @Then("the response should have rates based on the requested currency")
     public void theResponseShouldHaveRatesBasedOnTheRequestedCurrency() {
         data.response.assertThat().body("base", is(equalTo(data.baseCurrency)));
-        data.response.assertThat().body("date", is(equalTo(DateUtil.getDate())));
+        data.response.assertThat().body("date", is(equalTo(data.getDateHandler().date)));
     }
 
     @Given("^(\\w+) is set as the base currency")
@@ -101,7 +106,7 @@ public class LatestExchangeRateSteps {
         Map<String, Float> rates = response.getMap("rates");
         assertThat(rates.keySet()).hasSameElementsAs(data.currencies);
         rates.forEach((currency, exchangeRate) -> assertThat(exchangeRate, is(instanceOf(Float.class))));
-        assertThat(response.getString("date"), is(equalTo(DateUtil.getDate())));
+        assertThat(response.getString("date"), is(equalTo(data.getDateHandler().date)));
         assertThat(response.getString("base"), is(equalTo(data.baseCurrency)));
     }
 
