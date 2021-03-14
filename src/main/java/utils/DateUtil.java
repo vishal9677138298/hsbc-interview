@@ -5,7 +5,20 @@ import java.time.ZoneId;
 
 public class DateUtil {
 
-    public static String getCurrentDate(){
+    private static String date;
+
+    public static String getDate() {
+        if(date==null)
+            return getCurrentDate();
+        else
+            return date;
+    }
+
+    public void setDate(String date) {
+        DateUtil.date = date;
+    }
+
+    private static String getCurrentDate(){
         LocalDate date = LocalDate.now(ZoneId.of("GMT"));
         int dayOfWeek = date.getDayOfWeek().getValue();
         if(dayOfWeek<=6){

@@ -46,7 +46,7 @@ public class LatestExchangeRateSteps {
     public void theExchangeRatesMustBeFetchedForTheCurrentDate(String baseCurrency) {
         JsonPath jsonResponse = RequestHandler.getResponseAsJsonPath(data.response);
         assertThat(jsonResponse.getString("base"), is(equalTo(baseCurrency)));
-        assertThat(jsonResponse.getString("date"), is(equalTo(DateUtil.getCurrentDate())));
+        assertThat(jsonResponse.getString("date"), is(equalTo(DateUtil.getDate())));
         Map<String, Float> rates = jsonResponse.getMap("rates");
         assertThat(rates.keySet().size(), is(greaterThan(0)));
         rates.forEach((currency, exRate) -> {
@@ -68,7 +68,7 @@ public class LatestExchangeRateSteps {
         Map<String, Float> rates = response.getMap("rates");
         assertThat(rates.keySet()).hasSameElementsAs(data.currencies);
         rates.forEach((currency, exchangeRate) -> assertThat(exchangeRate, is(instanceOf(Float.class))));
-        assertThat(response.getString("date"), is(equalTo(DateUtil.getCurrentDate())));
+        assertThat(response.getString("date"), is(equalTo(DateUtil.getDate())));
     }
 
 
@@ -81,7 +81,7 @@ public class LatestExchangeRateSteps {
     @Then("the response should have rates based on the requested currency")
     public void theResponseShouldHaveRatesBasedOnTheRequestedCurrency() {
         data.response.assertThat().body("base", is(equalTo(data.baseCurrency)));
-        data.response.assertThat().body("date", is(equalTo(DateUtil.getCurrentDate())));
+        data.response.assertThat().body("date", is(equalTo(DateUtil.getDate())));
     }
 
     @Given("^(\\w+) is set as the base currency")
@@ -101,7 +101,7 @@ public class LatestExchangeRateSteps {
         Map<String, Float> rates = response.getMap("rates");
         assertThat(rates.keySet()).hasSameElementsAs(data.currencies);
         rates.forEach((currency, exchangeRate) -> assertThat(exchangeRate, is(instanceOf(Float.class))));
-        assertThat(response.getString("date"), is(equalTo(DateUtil.getCurrentDate())));
+        assertThat(response.getString("date"), is(equalTo(DateUtil.getDate())));
         assertThat(response.getString("base"), is(equalTo(data.baseCurrency)));
     }
 
