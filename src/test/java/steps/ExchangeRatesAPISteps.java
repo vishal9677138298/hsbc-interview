@@ -9,7 +9,7 @@ import io.restassured.path.json.JsonPath;
 import org.apache.http.HttpStatus;
 import requestEntities.Endpoint;
 import requestEntities.RequestHandler;
-import utils.DateUtil;
+import utils.DateHandler;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -18,10 +18,10 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.assertj.core.api.Assertions.*;
 
-public class LatestExchangeRateSteps {
+public class ExchangeRatesAPISteps {
     private StepsData data;
 
-    public LatestExchangeRateSteps(StepsData data){
+    public ExchangeRatesAPISteps(StepsData data){
         this.data = data;
     }
 
@@ -29,10 +29,10 @@ public class LatestExchangeRateSteps {
     public void setEndpoint(String date) {
         if (date.equals("currentDate")) {
             new Endpoint("/latest");
-            data.setDateHandler(new DateUtil());
+            data.setDateHandler(new DateHandler());
         } else {
             new Endpoint("/" + date);
-            data.setDateHandler(new DateUtil().setDate(date));
+            data.setDateHandler(new DateHandler().setDate(date));
         }
     }
 

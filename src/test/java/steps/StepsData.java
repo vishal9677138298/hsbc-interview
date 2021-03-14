@@ -1,7 +1,7 @@
 package steps;
 
 import io.restassured.response.ValidatableResponse;
-import utils.DateUtil;
+import utils.DateHandler;
 
 import java.util.List;
 
@@ -9,13 +9,13 @@ public class StepsData {
     protected ValidatableResponse response;
     protected List<String> currencies;
     protected String baseCurrency;
-    protected DateUtil dateHandler;
+    protected DateHandler dateHandler;
 
-    public DateUtil getDateHandler() {
+    public DateHandler getDateHandler() {
         return dateHandler;
     }
 
-    public void setDateHandler(DateUtil dateHandler) {
+    public void setDateHandler(DateHandler dateHandler) {
         this.dateHandler = dateHandler;
     }
 

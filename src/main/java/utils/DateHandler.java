@@ -3,11 +3,11 @@ package utils;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-public class DateUtil {
+public class DateHandler {
 
     public String date = getCurrentDate();
 
-    public DateUtil setDate(String date) {
+    public DateHandler setDate(String date) {
         this.date = date;
         return this;
     }
