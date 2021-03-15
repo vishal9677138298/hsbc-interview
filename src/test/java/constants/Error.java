@@ -5,7 +5,8 @@ package constants;
  */
 public enum Error {
     INVALID_SYMBOL("Symbols '%s' are invalid for date"),
-    INVALID_BASE("Base '%s' is not supported.");
+    INVALID_BASE("Base '%s' is not supported."),
+    INVALID_DATE("time data '%s' does not match format '%%Y-%%m-%%d'");
 
     private String errorMessage;
 

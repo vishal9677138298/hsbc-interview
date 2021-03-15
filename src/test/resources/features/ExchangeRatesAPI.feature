@@ -11,7 +11,7 @@ Feature: Foreign Exchange Rates
 
     @latestExchangeRates
     Examples:
-      | date |
+      | date        |
       | currentDate |
 
     @pastExchangeRates
@@ -27,12 +27,12 @@ Feature: Foreign Exchange Rates
 
     @latestExchangeRates
     Examples:
-      | date |
+      | date        |
       | currentDate |
 
     @pastExchangeRates
     Examples:
-      | date |
+      | date       |
       | 2020-03-24 |
 
   @smoke @regression
@@ -47,12 +47,12 @@ Feature: Foreign Exchange Rates
 
     @latestExchangeRates
     Examples:
-      | date |
+      | date        |
       | currentDate |
 
     @pastExchangeRates
     Examples:
-      | date |
+      | date       |
       | 2020-03-24 |
 
   @smoke @regression
@@ -63,12 +63,12 @@ Feature: Foreign Exchange Rates
 
     @latestExchangeRates
     Examples:
-      | date |
+      | date        |
       | currentDate |
 
     @pastExchangeRates
     Examples:
-      | date |
+      | date       |
       | 2020-03-24 |
 
   @smoke @regression
@@ -84,32 +84,32 @@ Feature: Foreign Exchange Rates
 
     @latestExchangeRates
     Examples:
-      | date |
+      | date        |
       | currentDate |
 
     @pastExchangeRates
     Examples:
-      | date |
+      | date       |
       | 2020-03-24 |
 
   @negative @regression
   Scenario Outline: Invalid currency symbols
     Given when <date> is set as the date
     When making a call to the rates api with several currencies as query param
-      | TEST |
-      | INR |
-      | AUD |
+      | TEST    |
+      | INR     |
+      | AUD     |
       | INVALID |
     Then response should be 400 with an appropriate error message for INVALID_SYMBOL
 
     @latestExchangeRates
     Examples:
-      | date |
+      | date        |
       | currentDate |
 
     @pastExchangeRates
     Examples:
-      | date |
+      | date       |
       | 2020-03-24 |
 
   @negative @regression
@@ -120,10 +120,24 @@ Feature: Foreign Exchange Rates
 
   @latestExchangeRates
     Examples:
-      | date |
+      | date        |
       | currentDate |
 
   @pastExchangeRates
     Examples:
-      | date |
+      | date       |
       | 2020-03-24 |
+
+  @regression @negative
+  Scenario Outline: Invalid date format
+    Given when <invalidDate> is set as the date
+    When making a call to the rates api
+    Then response should be 400 with an appropriate error message for INVALID_DATE
+
+    @pastExchangeRates
+    Examples:
+      | invalidDate |
+      | 2020-28-03  |
+
+
+

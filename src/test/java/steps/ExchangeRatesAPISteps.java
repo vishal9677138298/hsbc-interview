@@ -129,6 +129,9 @@ public class ExchangeRatesAPISteps {
                 data.currencies.forEach(currencyListString::add);
                 errorMsg = String.format(errorType.getErrorMessage(), currencyListString);
                 break;
+            case INVALID_DATE:
+                errorMsg = String.format(errorType.getErrorMessage(), data.getDateHandler().date);
+                break;
         }
 
         data.response.assertThat()
