@@ -13,7 +13,6 @@ import utils.DateHandler;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
-
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 import static org.assertj.core.api.Assertions.*;
@@ -25,6 +24,10 @@ public class ExchangeRatesAPISteps {
         this.data = data;
     }
 
+    /**
+     * This method sets the endpoint according to the date.
+     * @param date current date or any past date
+     */
     @Given("^when (currentDate|\\d{4}-\\d{2}-\\d{2}) is set as the date$")
     public void setEndpoint(String date) {
         if (date.equals("currentDate")) {
@@ -43,20 +46,20 @@ public class ExchangeRatesAPISteps {
 
     @Then("the response code must be 200")
     public void checkResponse(){
-        data.response.assertThat().statusCode(HttpStatus.SC_OK);
+        data.response.assertThat().statusCode(HttpStatus.SC_OK); //Asserting 200 response code
     }
 
 
     @Then("^the exchange rates must be fetched for the requested date for various currencies based on (\\w+)$")
     public void theExchangeRatesMustBeFetchedForTheCurrentDate(String baseCurrency) {
         JsonPath jsonResponse = RequestHandler.getResponseAsJsonPath(data.response);
-        assertThat(jsonResponse.getString("base"), is(equalTo(baseCurrency)));
-        assertThat(jsonResponse.getString("date"), is(equalTo(data.getDateHandler().date)));
+        assertThat(jsonResponse.getString("base"), is(equalTo(baseCurrency))); //Assertion for base currency
+        assertThat(jsonResponse.getString("date"), is(equalTo(data.getDateHandler().date))); //Assertion for today's date
         Map<String, Float> rates = jsonResponse.getMap("rates");
-        assertThat(rates.keySet().size(), is(greaterThan(0)));
+        assertThat(rates.keySet().size(), is(greaterThan(0))); //Asserting if rates json is not empty
         rates.forEach((currency, exRate) -> {
             assertThat(currency, is(instanceOf(String.class)));
-            assertThat(exRate, is(instanceOf(Float.class)));
+            assertThat(exRate, is(instanceOf(Float.class))); //Asserting if the rates are of float data type
         });
     }
 
@@ -71,9 +74,10 @@ public class ExchangeRatesAPISteps {
     public void theResponseMustOnlyHaveTheExchangeRatesForTheRequestedCurrencies() {
         JsonPath response = RequestHandler.getResponseAsJsonPath(data.response);
         Map<String, Float> rates = response.getMap("rates");
-        assertThat(rates.keySet()).hasSameElementsAs(data.currencies);
+        assertThat(rates.keySet()).hasSameElementsAs(data.currencies); //If the rates json has same currencies as
+                                                                      // requested in symbols query param
         rates.forEach((currency, exchangeRate) -> assertThat(exchangeRate, is(instanceOf(Float.class))));
-        assertThat(response.getString("date"), is(equalTo(data.getDateHandler().date)));
+        assertThat(response.getString("date"), is(equalTo(data.getDateHandler().date))); //Assertion for Today's date
     }
 
 
@@ -85,8 +89,8 @@ public class ExchangeRatesAPISteps {
 
     @Then("the response should have rates based on the requested currency")
     public void theResponseShouldHaveRatesBasedOnTheRequestedCurrency() {
-        data.response.assertThat().body("base", is(equalTo(data.baseCurrency)));
-        data.response.assertThat().body("date", is(equalTo(data.getDateHandler().date)));
+        data.response.assertThat().body("base", is(equalTo(data.baseCurrency))); //Assertion for base currency
+        data.response.assertThat().body("date", is(equalTo(data.getDateHandler().date))); //Assertion for Today's date
     }
 
     @Given("^(\\w+) is set as the base currency")
@@ -104,7 +108,8 @@ public class ExchangeRatesAPISteps {
     public void theResultsShouldHaveExchangeRatesForRequestedCurrenciesBasedOnTheRequestedBaseCurrency() {
         JsonPath response = RequestHandler.getResponseAsJsonPath(data.response);
         Map<String, Float> rates = response.getMap("rates");
-        assertThat(rates.keySet()).hasSameElementsAs(data.currencies);
+        assertThat(rates.keySet()).hasSameElementsAs(data.currencies); //If the rates json has same currencies as
+                                                                      // requested in symbols query param
         rates.forEach((currency, exchangeRate) -> assertThat(exchangeRate, is(instanceOf(Float.class))));
         assertThat(response.getString("date"), is(equalTo(data.getDateHandler().date)));
         assertThat(response.getString("base"), is(equalTo(data.baseCurrency)));

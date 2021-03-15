@@ -11,7 +11,14 @@ public class RequestHandler {
     private Request request;
     private RequestSpecBuilder requestBuilder = new RequestSpecBuilder();
 
-    public ValidatableResponse processRequest(Request request){
+    /**
+     * Processes the request by setting the headers, query params, body and HTTP method. Also sends the request to the
+     * endpoint thereby logging both the request and response.
+     *
+     * @param request request object
+     * @return a validatable response
+     */
+    public ValidatableResponse getResponse(Request request){
         RequestHandler handler = new RequestHandler();
         handler.request = request;
         setHeaders(handler.request, handler);
@@ -50,22 +57,52 @@ public class RequestHandler {
 
     }
 
+    /**
+     * Fires a GET request and also logs both the request and response
+     *
+     * @param rspec request specification object
+     * @return a validatable response
+     */
     private ValidatableResponse get(RequestSpecification rspec){
         return RestAssured.given(rspec).log().all().get().then().log().all();
     }
 
+    /**
+     * Fires a POST request and also logs both the request and response
+     *
+     * @param rspec request specification object
+     * @return a validatable response
+     */
     private ValidatableResponse post(RequestSpecification rspec){
         return RestAssured.given(rspec).log().all().post().then().log().all();
     }
 
+    /**
+     * Fires a PUT request and also logs both the request and response
+     *
+     * @param rspec request specification object
+     * @return a validatable response
+     */
     private ValidatableResponse put(RequestSpecification rspec){
         return RestAssured.given(rspec).log().all().put().then().log().all();
     }
 
+    /**
+     * Fires a DELETE request and also logs both the request and response
+     *
+     * @param rspec request specification object
+     * @return a validatable response
+     */
     private ValidatableResponse delete(RequestSpecification rspec){
         return RestAssured.given(rspec).log().all().delete().then().log().all();
     }
 
+    /**
+     * To change the response to a validatable json
+     *
+     * @param response validatable response
+     * @return a validatable json object
+     */
     public static JsonPath getResponseAsJsonPath(ValidatableResponse response){
         return response.extract().body().jsonPath();
     }

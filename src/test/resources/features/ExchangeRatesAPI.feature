@@ -20,7 +20,7 @@ Feature: Foreign Exchange Rates
       | 2020-03-24 |
 
   @smoke @regression
-  Scenario Outline: Get exchange rates for current date
+  Scenario Outline: Get exchange rates for current or past date
     Given when <date> is set as the date
     When making a call to the rates api
     Then the exchange rates must be fetched for the requested date for various currencies based on EUR

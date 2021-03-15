@@ -9,6 +9,11 @@ public class PropertyLoader {
     private static final Properties PROPERTIES = new Properties();
     private String propertyName;
 
+    /**
+     * Loads a property file from a local directory
+     *
+     * @param  path file path at which the property file is present
+     */
     public PropertyLoader(String propertyName, String path){
         this.propertyName = propertyName;
         this.path = path;
@@ -19,6 +24,12 @@ public class PropertyLoader {
         }
     }
 
+    /**
+     * Read the desired property from property file
+     *
+     * @param  name desired property name
+     * @return value for the requested property
+     */
     public String getProperty(String name){
         String key = propertyName + "." + name;
         String property = PROPERTIES.getProperty(key);
