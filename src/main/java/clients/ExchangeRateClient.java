@@ -1,16 +1,16 @@
 package clients;
 
 import io.restassured.response.ValidatableResponse;
-import requestEntities.HttpMethod;
-import requestEntities.Request;
-import requestEntities.RequestHandler;
+import restEntities.HttpMethod;
+import restEntities.Request;
+import restEntities.RequestHandler;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class CurrentExRateClient {
+public class ExchangeRateClient {
     private static RequestHandler reqHandler = new RequestHandler();
 
     /**

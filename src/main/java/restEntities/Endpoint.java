@@ -1,4 +1,4 @@
-package requestEntities;
+package restEntities;
 
 import io.restassured.RestAssured;
 import utils.PropertyLoader;

@@ -1,4 +1,4 @@
-package requestEntities;
+package restEntities;
 
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -95,16 +95,6 @@ public class RequestHandler {
      */
     private ValidatableResponse delete(RequestSpecification rspec){
         return RestAssured.given(rspec).log().all().delete().then().log().all();
-    }
-
-    /**
-     * To change the response to a validatable json
-     *
-     * @param response validatable response
-     * @return a validatable json object
-     */
-    public static JsonPath getResponseAsJsonPath(ValidatableResponse response){
-        return response.extract().body().jsonPath();
     }
 
 }

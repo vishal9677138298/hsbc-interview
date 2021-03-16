@@ -1,4 +1,4 @@
-package requestEntities;
+package restEntities;
 
 import java.util.Map;
 

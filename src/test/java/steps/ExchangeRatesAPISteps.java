@@ -1,14 +1,14 @@
 package steps;
 
-import clients.CurrentExRateClient;
+import clients.ExchangeRateClient;
 import constants.Error;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.path.json.JsonPath;
 import org.apache.http.HttpStatus;
-import requestEntities.Endpoint;
-import requestEntities.RequestHandler;
+import restEntities.Endpoint;
+import restEntities.ResponseHandler;
 import utils.DateHandler;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class ExchangeRatesAPISteps {
 
     @When("making a call to the rates api")
     public void fireRequest(){
-        data.response = CurrentExRateClient.getCurrentExchangeRates();
+        data.response = ExchangeRateClient.getCurrentExchangeRates();
     }
 
     @Then("the response code must be 200")
@@ -52,7 +52,7 @@ public class ExchangeRatesAPISteps {
 
     @Then("^the exchange rates must be fetched for the requested date for various currencies based on (\\w+)$")
     public void theExchangeRatesMustBeFetchedForTheCurrentDate(String baseCurrency) {
-        JsonPath jsonResponse = RequestHandler.getResponseAsJsonPath(data.response);
+        JsonPath jsonResponse = ResponseHandler.getResponseAsJsonPath(data.response);
         assertThat(jsonResponse.getString("base"), is(equalTo(baseCurrency))); //Assertion for base currency
         assertThat(jsonResponse.getString("date"), is(equalTo(data.getDateHandler().date))); //Assertion for today's date
         Map<String, Float> rates = jsonResponse.getMap("rates");
@@ -66,13 +66,13 @@ public class ExchangeRatesAPISteps {
 
     @When("^making a call to the rates api with several currencies as query param$")
     public void makingACallToLatestRateApiWithSeveralCurrenciesAsQueryParam(List<String> currencies) {
-        data.response = CurrentExRateClient.getRatesForCurrencies(currencies);
+        data.response = ExchangeRateClient.getRatesForCurrencies(currencies);
         data.setCurrencies(currencies);
     }
 
     @Then("the response must only have the exchange rates for the requested currencies")
     public void theResponseMustOnlyHaveTheExchangeRatesForTheRequestedCurrencies() {
-        JsonPath response = RequestHandler.getResponseAsJsonPath(data.response);
+        JsonPath response = ResponseHandler.getResponseAsJsonPath(data.response);
         Map<String, Float> rates = response.getMap("rates");
         assertThat(rates.keySet()).hasSameElementsAs(data.currencies); //If the rates json has same currencies as
                                                                       // requested in symbols query param
@@ -83,7 +83,7 @@ public class ExchangeRatesAPISteps {
 
     @When("^making a call to rates api with (\\w+) as the base currency$")
     public void makingACallToLatestRateApiWithUSDAsTheBaseCurrency(String baseCurrency) {
-        data.response = CurrentExRateClient.getExRatesBasedOnCurrency(baseCurrency);
+        data.response = ExchangeRateClient.getExRatesBasedOnCurrency(baseCurrency);
         data.setBaseCurrency(baseCurrency);
     }
 
@@ -100,13 +100,13 @@ public class ExchangeRatesAPISteps {
 
     @When("firing a request to latest rate api with the below currency list as query param")
     public void firingARequestToLatestRateApiWithACurrencyListAsQueryParam(List<String> currencyList) {
-        data.response = CurrentExRateClient.getExRatesBasedOnCurrencyFor(data.baseCurrency, currencyList);
+        data.response = ExchangeRateClient.getExRatesBasedOnCurrencyFor(data.baseCurrency, currencyList);
         data.setCurrencies(currencyList);
     }
 
     @Then("the results should have exchange rates for requested currencies based on the requested base currency")
     public void theResultsShouldHaveExchangeRatesForRequestedCurrenciesBasedOnTheRequestedBaseCurrency() {
-        JsonPath response = RequestHandler.getResponseAsJsonPath(data.response);
+        JsonPath response = ResponseHandler.getResponseAsJsonPath(data.response);
         Map<String, Float> rates = response.getMap("rates");
         assertThat(rates.keySet()).hasSameElementsAs(data.currencies); //If the rates json has same currencies as
                                                                       // requested in symbols query param

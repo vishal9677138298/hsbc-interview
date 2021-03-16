@@ -1,4 +1,4 @@
-package requestEntities;
+package restEntities;
 
 public enum HttpMethod {
     GET,
