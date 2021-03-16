@@ -31,10 +31,10 @@ public class ExchangeRatesAPISteps {
     @Given("^when (currentDate|\\d{4}-\\d{2}-\\d{2}) is set as the date$")
     public void setEndpoint(String date) {
         if (date.equals("currentDate")) {
-            new Endpoint("/latest");
+            new Endpoint("ExchangeRate","/latest");
             data.setDateHandler(new DateHandler());
         } else {
-            new Endpoint("/" + date);
+            new Endpoint("ExchangeRate","/" + date);
             data.setDateHandler(new DateHandler().setDate(date));
         }
     }

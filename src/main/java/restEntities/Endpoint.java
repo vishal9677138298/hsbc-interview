@@ -9,10 +9,11 @@ public class Endpoint {
     /**
      * Sets the BaseURI and Base Path
      *
+     * @param api name of the api which is present as key in config.properties files
      * @param path basePath for the api endpoint
      */
-    public Endpoint(String path){
-        RestAssured.baseURI = new PropertyLoader("ExchangeRate", fileName).getProperty("host");
+    public Endpoint(String api, String path){
+        RestAssured.baseURI = new PropertyLoader(api, fileName).getProperty("host");
         RestAssured.basePath=path;
     }
 
